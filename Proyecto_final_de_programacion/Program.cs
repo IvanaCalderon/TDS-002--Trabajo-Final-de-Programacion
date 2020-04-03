@@ -16,7 +16,7 @@ namespace Proyecto_final_de_programacion
         static List<Pelicula> Peliculas { get; set; }
 
 
-        static void cargarBaseDeDatas()
+        static void cargarBaseDeDatos()
         {
             string docPath = AppDomain.CurrentDomain.BaseDirectory;
             try
@@ -54,7 +54,7 @@ namespace Proyecto_final_de_programacion
                 Usuarios = new List<Usuario>
             {
                 Empleados[0],
-                new Empleado {
+                new Empleado {          //Unica cuanta de administrador creada por default
                     Nombre = "Ivana",
                     Apellido = "Calderon",
                     Direccion = "Calle Paravel 123",
@@ -91,7 +91,7 @@ namespace Proyecto_final_de_programacion
 
         public static void Main(string[] args)
         {
-            cargarBaseDeDatas();
+            cargarBaseDeDatos();
             menuInicio();
             mostrarMenu();
         }
@@ -119,7 +119,7 @@ namespace Proyecto_final_de_programacion
             } while (!esLoginValido);
         }
 
-        static void mostrarMenu()
+        static void mostrarMenu() //Este metodo filtra el login segun el tipo de usuario que sea
         {
             switch (UsuarioActual.TipoDeUsuario)
             {
@@ -211,7 +211,7 @@ namespace Proyecto_final_de_programacion
             var opcion = 0;
             do
             {
-                Console.WriteLine("Elige la accion que quieres:");
+                Console.WriteLine("\nElige la accion que quieres:\n");
                 Console.WriteLine("[1] - Alquilar pelicula");
                 Console.WriteLine("[2] - Lista de peliculas alquiladas");
                 Console.WriteLine("[0] - Salir");
@@ -219,6 +219,7 @@ namespace Proyecto_final_de_programacion
                 switch (int.Parse(Console.ReadLine()))
                 {
                     case 1:
+                        listarPeliculas();
                         alquilarPelicula();
                             guardar();
                         break;
@@ -520,9 +521,11 @@ namespace Proyecto_final_de_programacion
 
         #endregion
 
+        #region Guardar
+
         static void guardar()
         {
-            // Set a variable to the Documents path.
+            // Este metodo permite guardar los cambios en la base de datos
             string docPath = AppDomain.CurrentDomain.BaseDirectory;
 
             var usuariosSerializados = JsonConvert.SerializeObject(Usuarios);
@@ -543,5 +546,7 @@ namespace Proyecto_final_de_programacion
                 outputFile.Write(empleadosSerializados);
             }
         }
+
+        #endregion 
     }
 }
