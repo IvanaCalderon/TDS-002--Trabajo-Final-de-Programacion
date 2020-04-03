@@ -1,0 +1,11 @@
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\bin\Debug\netcoreapp3.1\Proyecto_final_de_programacion.exe
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\bin\Debug\netcoreapp3.1\Proyecto_final_de_programacion.deps.json
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\bin\Debug\netcoreapp3.1\Proyecto_final_de_programacion.runtimeconfig.json
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\bin\Debug\netcoreapp3.1\Proyecto_final_de_programacion.runtimeconfig.dev.json
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\bin\Debug\netcoreapp3.1\Proyecto_final_de_programacion.dll
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\bin\Debug\netcoreapp3.1\Proyecto_final_de_programacion.pdb
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\obj\Debug\netcoreapp3.1\Proyecto_final_de_programacion.csprojAssemblyReference.cache
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\obj\Debug\netcoreapp3.1\Proyecto_final_de_programacion.AssemblyInfoInputs.cache
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\obj\Debug\netcoreapp3.1\Proyecto_final_de_programacion.AssemblyInfo.cs
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\obj\Debug\netcoreapp3.1\Proyecto_final_de_programacion.dll
+C:\Users\Lisa\source\repos\Proyecto_final_de_programacion\Proyecto_final_de_programacion\obj\Debug\netcoreapp3.1\Proyecto_final_de_programacion.pdb
