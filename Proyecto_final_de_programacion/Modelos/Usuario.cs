@@ -22,7 +22,7 @@ namespace Proyecto_final_de_programacion.Modelos
 
         public override string ToString()
         {
-            return $"{Nombre} {Apellido}";
+            return $"{Nombre} {Apellido}<{Correo}>";
         }
     }
 
