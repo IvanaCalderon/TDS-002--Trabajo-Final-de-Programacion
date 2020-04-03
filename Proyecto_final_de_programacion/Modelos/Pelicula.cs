@@ -10,6 +10,11 @@ namespace Proyecto_final_de_programacion.Modelos
         public float Precio { get; set; }
         public int DiasAlquiler { get; set; }
 
-        public DateTime? FechaDeRetorno { get; set; } 
+        public DateTime? FechaDeRetorno { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Nombre} ${Precio}";
+        }
     }
 }

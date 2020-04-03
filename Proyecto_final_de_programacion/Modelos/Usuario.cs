@@ -6,6 +6,10 @@ namespace Proyecto_final_de_programacion.Modelos
 {
     public class Usuario
     {
+        public Usuario()
+        {
+            Peliculas = new List<Pelicula>();
+        }
         public string Correo { get; set; }
 
         public string Password { get; set; }

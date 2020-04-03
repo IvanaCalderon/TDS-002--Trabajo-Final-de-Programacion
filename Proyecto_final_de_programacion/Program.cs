@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using Proyecto_final_de_programacion.Modelos;
 
 namespace Proyecto_final_de_programacion
@@ -17,8 +18,27 @@ namespace Proyecto_final_de_programacion
 
         static void cargarBaseDeDatas()
         {
-            //TODO Cargar desde base de datos
-            Empleados = new List<Empleado>
+            string docPath = AppDomain.CurrentDomain.BaseDirectory;
+            try
+            {
+                using (StreamReader sr = new StreamReader(Path.Combine(docPath, "Usuarios.txt")))
+                {
+                    Usuarios = JsonConvert.DeserializeObject<List<Usuario>>(sr.ReadToEnd());
+                }
+                using (StreamReader sr = new StreamReader(Path.Combine(docPath, "Empleados.txt")))
+                {
+                    Empleados = JsonConvert.DeserializeObject<List<Empleado>>(sr.ReadToEnd());
+                }
+
+                using (StreamReader sr = new StreamReader(Path.Combine(docPath, "Peliculas.txt")))
+                {
+                    Peliculas = JsonConvert.DeserializeObject<List<Pelicula>>(sr.ReadToEnd());
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Archivos de base de datos no encontrados o informacion corrompida, vamos a crear una base de datos nueva");
+                Empleados = new List<Empleado>
             {
                 new Empleado {
                     Nombre = "Juan",
@@ -31,7 +51,7 @@ namespace Proyecto_final_de_programacion
                 },
             };
 
-            Usuarios = new List<Usuario>
+                Usuarios = new List<Usuario>
             {
                 Empleados[0],
                 new Empleado {
@@ -48,12 +68,12 @@ namespace Proyecto_final_de_programacion
                     Apellido = "Smith",
                     Direccion = "Calle Paravel 345",
                     TipoDeUsuario = TiposDeUsuario.Cliente,
-                    Correo = "ivana@calderon.com",
+                    Correo = "jhony@smith.com",
                     Password = "123123"
                 },
             };
 
-            Peliculas = new List<Pelicula>
+                Peliculas = new List<Pelicula>
             {
                 new Pelicula
                 {
@@ -63,6 +83,9 @@ namespace Proyecto_final_de_programacion
                     FechaDeRetorno = null,
                 }
             };
+
+                guardar();
+            }
         }
         #endregion
 
@@ -78,7 +101,7 @@ namespace Proyecto_final_de_programacion
             do
             {
                 Console.WriteLine("Bienvenido al sistema de alquiler de peliculas");
-                Console.WriteLine("Ingresa tu nombre de usuario");
+                Console.WriteLine("\nIngresa tu nombre de usuario\n");
                 var correo = Console.ReadLine();
                 Console.WriteLine("Ingresa tu contraseña");
                 var password = Console.ReadLine();
@@ -112,12 +135,13 @@ namespace Proyecto_final_de_programacion
             }
         }
 
+        #region Menus
         static void menuAdministrador() //Menu del administrador
         {
             var opcion = 0;
             do
             {
-                Console.WriteLine("Elige la accion que quieres:");
+                Console.WriteLine("\nElige la accion que quieres:\n");
                 Console.WriteLine("[1] - Agregar empleado");
                 Console.WriteLine("[2] - Editar empleado");
                 Console.WriteLine("[3] - Borrar empleado");
@@ -127,6 +151,7 @@ namespace Proyecto_final_de_programacion
                 Console.WriteLine("[7] - Ganancias de las peliculas");
                 Console.WriteLine("[8] - Listar empleados");
                 Console.WriteLine("[9] - Listar peliculas");
+                Console.WriteLine("[10] - Borrar Cliente");
                 Console.WriteLine("[0] - Salir");
 
                 opcion = int.Parse(Console.ReadLine());
@@ -134,32 +159,45 @@ namespace Proyecto_final_de_programacion
                 {
                     case 1:
                         agregarEmpleado();
+                        guardar();
                         break;
                     case 2:
                         listarEmpleados();
                         editarEmpleado();
+                        guardar();
                         break;
                     case 3:
                         listarEmpleados();
                         borrarEmpleado();
+                        guardar();
                         break;
                     case 4:
                         agregarPelicula();
+                        guardar();
                         break;
-                    /*   case 5:
-                           editarPelicula();
-                           break; */
-                    //case 6:
-                    //    borrarPelicula();
-                    //    break;
-                    //case 7:
-                    //    gananciaPeliculas();
-                    //    break;
+                    case 5:
+                        listarPeliculas();
+                        editarPeliculas();
+                        guardar();
+                        break;
+                    case 6:
+                        listarPeliculas();
+                        borrarPeliculas();
+                        guardar();
+                        break;
+                     case 7:
+                         gananciaPeliculas();
+                         break; 
                     case 8:
                         listarEmpleados();
                         break;
                     case 9:
                         listarPeliculas();
+                        break;
+                    case 10:
+                        listarClientes();
+                        borrarCliente();
+                        guardar();
                         break;
                     default:
                         Console.WriteLine("Opcion no valida");
@@ -176,22 +214,20 @@ namespace Proyecto_final_de_programacion
                 Console.WriteLine("Elige la accion que quieres:");
                 Console.WriteLine("[1] - Alquilar pelicula");
                 Console.WriteLine("[2] - Lista de peliculas alquiladas");
-                Console.WriteLine("[3] - Fecha de entrega de pelicula");
+                Console.WriteLine("[0] - Salir");
 
                 switch (int.Parse(Console.ReadLine()))
                 {
-                    /*case 1:
+                    case 1:
                         alquilarPelicula();
+                            guardar();
                         break;
                     case 2:
                         peliculasAlquiladas();
                         break;
-                    case 3:
-                        fechaEntrega();
-                        break;*/
+
                     default:
                         Console.WriteLine("Opcion no valida");
-                        
                         break;
                 }
             }
@@ -208,47 +244,54 @@ namespace Proyecto_final_de_programacion
                 Console.WriteLine("[2] - Editar cliente");
                 Console.WriteLine("[3] - Alquilar pelicula a cliente");
                 Console.WriteLine("[4] - Peliculas alquiladas");
+                Console.WriteLine("[0] - Salir");
 
                 switch (int.Parse(Console.ReadLine()))
-                {/* 
-                case 1:
-                    agregarCliente();
+                {
+                    case 1:
+                        agregarCliente();
+                        guardar();
+                        break;
+                    case 2:
+                        listarClientes();
+                        editarCliente();
+                        guardar();
+                        break;
+                    case 3:
+                        listarPeliculas();
+                        alquilarPelicula();
+                        guardar();
 
-                    break;
-                case 2:
-                    editarCliente();
+                        break;
+                    case 4:
+                        peliculasAlquiladas();
+                        guardar();
+                        break;
 
-                    break;
-                case 3:
-                    alquilarPelicula();
-
-                    break;
-                case 4:
-                    peliculasAlquiladas();
-
-                    break;
-                    */
+                    case 5:
+                        listarClientes();
+                        break;
                     default:
                         Console.WriteLine("Opcion no valida");
-                        
                         break;
                 }
             }
             while (opcion != 0);
         }
+        #endregion
 
         #region Peliculas
         static void agregarPelicula()
         {
             var newPelicula = new Pelicula();
-            
+
             Console.WriteLine("Escribe nombre de la pelicula:");
             newPelicula.Nombre = Console.ReadLine();
             Console.WriteLine("Escribe precio de la pelicula: ");
-            newPelicula.Precio = (float) Convert.ToDouble(Console.ReadLine());
+            newPelicula.Precio = (float)Convert.ToDouble(Console.ReadLine());
             Console.WriteLine("Escribe los dias de alquiler: ");
             newPelicula.DiasAlquiler = Convert.ToInt32(Console.ReadLine());
-          
+
             Peliculas.Add(newPelicula);
         }
 
@@ -261,9 +304,148 @@ namespace Proyecto_final_de_programacion
             }
         }
 
-        #endregion
+        static void editarPeliculas()
+        {
+            Console.WriteLine("Escribe el nombre de la pelicula para editar: ");
+            var nombre = Console.ReadLine();
+            var pelicula = Peliculas.FirstOrDefault(x => x.Nombre.ToLower() == nombre.ToLower());
+            if (pelicula == null)
+            {
+                Console.WriteLine("\nLa pelicula al modificar no existe\n");
+                return;
+            }
+
+            Console.WriteLine($"Modificando la pelicula:\n {pelicula}");
+            Console.WriteLine("Escribe nombre de la pelicula:");
+            pelicula.Nombre = Console.ReadLine();
+            Console.WriteLine("Escribe precio de la pelicula: ");
+            pelicula.Precio = (float)Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Escribe los dias de alquiler: ");
+            pelicula.DiasAlquiler = Convert.ToInt32(Console.ReadLine());
+        }
+
+        static void borrarPeliculas()
+        {
+            Console.WriteLine("Escribe el nombre de la pelicula para eliminar: ");
+            var nombre = Console.ReadLine();
+            var pelicula = Peliculas.FirstOrDefault(x => x.Nombre.ToLower() == nombre.ToLower());
+            if (pelicula == null)
+            {
+                Console.WriteLine("El usuario que intentas eliminar no existe\n");
+                return;
+            }
+            Peliculas.Remove(pelicula);
+        }
+
+        static void alquilarPelicula()
+        {
+            Console.WriteLine("Escribe el nombre de la pelicula para alquilar: ");
+            var nombre = Console.ReadLine();
+            var pelicula = Peliculas.FirstOrDefault(x => x.Nombre.ToLower() == nombre.ToLower());
+            if (pelicula == null)
+            {
+                Console.WriteLine("\nLa pelicula al modificar no existe\n");
+                return;
+            }
+
+            UsuarioActual.Peliculas.Add(pelicula);
+
+        }
+
+        static void peliculasAlquiladas()
+        {
+            Console.WriteLine("\nListado de peliculas alquiladas\n");
+            foreach (var pelicula in UsuarioActual.Peliculas)
+            {
+                Console.WriteLine($"Pelicula:{pelicula.Nombre} Fecha de retorno:{pelicula.FechaDeRetorno} ");
+            }
+
+        }
+
+        static void gananciaPeliculas()
+        {
+            Console.Write("Ganancias de las peliculas");
+            var ganancia = 0.0f;
+            foreach (var pelicula in Peliculas.Where(x => x.FechaDeRetorno != null))
+            {
+                ganancia += pelicula.Precio;
+            }
+
+            Console.WriteLine($"La ganancia es de ${ganancia}");
+        }
 
         
+
+
+
+        #endregion
+
+        #region Clientes
+
+        static void agregarCliente()
+        {
+            var newUsuario = new Usuario();
+            newUsuario.TipoDeUsuario = TiposDeUsuario.Cliente;
+            Console.WriteLine("Escribe primer nombre:");
+            newUsuario.Nombre = Console.ReadLine();
+            Console.WriteLine("Escribe apellido: ");
+            newUsuario.Apellido = Console.ReadLine();
+            Console.WriteLine("Escribe la direccion: ");
+            newUsuario.Direccion = Console.ReadLine();
+            Console.WriteLine("Escribe nuevo correo de usuario: ");
+            newUsuario.Correo = Console.ReadLine();
+            Console.WriteLine("Asigna contraseña al usuario: ");
+            newUsuario.Password = Console.ReadLine();
+            Usuarios.Add(newUsuario);
+
+        }
+
+        static void editarCliente()
+        {
+            Console.WriteLine("Escribe el correo del cliente: ");
+            var correo = Console.ReadLine();
+            var cliente = Empleados.FirstOrDefault(x => x.Correo.ToLower() == correo.ToLower());
+            if (cliente == null)
+            {
+                Console.WriteLine("El cliente que intentas modificar no existe\n");
+                return;
+            }
+            Console.WriteLine($"Modificando cliente:\n {cliente}");
+            Console.WriteLine("Escribe primer nombre:");
+            cliente.Nombre = Console.ReadLine();
+            Console.WriteLine("Escribe apellido: ");
+            cliente.Apellido = Console.ReadLine();
+            Console.WriteLine("Escribe la direccion: ");
+            cliente.Direccion = Console.ReadLine();
+            Console.WriteLine("Escribe nuevo correo de cliente: ");
+            cliente.Correo = Console.ReadLine();
+            Console.WriteLine("Asigna contraseña al cliente: ");
+            cliente.Password = Console.ReadLine();
+
+        }
+
+        static void listarClientes()
+        {
+            Console.WriteLine("\nListado de clientes\n");
+            foreach (var usuario in Usuarios)
+            {
+                Console.WriteLine($"{usuario.Nombre} {usuario.Apellido} <{usuario.Correo}>");
+            }
+        }
+
+        static void borrarCliente()
+        {
+            Console.WriteLine("Escribe el correo del cliente para eliminar: ");
+            var correo = Console.ReadLine();
+            var cliente = Usuarios.FirstOrDefault(x => x.Correo.ToLower() == correo.ToLower());
+            if (cliente == null)
+            {
+                Console.WriteLine("El usuario que intentas eliminar no existe\n");
+                return;
+            }
+            Usuarios.Remove(cliente);
+        }
+        #endregion
 
 
 
@@ -337,5 +519,29 @@ namespace Proyecto_final_de_programacion
         }
 
         #endregion
+
+        static void guardar()
+        {
+            // Set a variable to the Documents path.
+            string docPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            var usuariosSerializados = JsonConvert.SerializeObject(Usuarios);
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "Usuarios.txt")))
+            {
+                outputFile.Write(usuariosSerializados);
+            }
+
+            var peliculasSerializados = JsonConvert.SerializeObject(Peliculas);
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "Peliculas.txt")))
+            {
+                outputFile.Write(peliculasSerializados);
+            }
+
+            var empleadosSerializados = JsonConvert.SerializeObject(Empleados);
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "Empleados.txt")))
+            {
+                outputFile.Write(empleadosSerializados);
+            }
+        }
     }
 }
